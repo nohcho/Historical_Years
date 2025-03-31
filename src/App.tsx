@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { HistoryPage } from './app/pages/HistoryPage';
+import './styles.scss';
 
 const App: React.FC = () => {
-    return <h1>Hello from React + TypeScript + Webpack!</h1>;
+  return (
+    <div className={'container'}>
+      <HistoryPage />;
+    </div>
+  );
 };
 
 export default App;
