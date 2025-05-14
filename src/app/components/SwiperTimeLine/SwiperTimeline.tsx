@@ -5,10 +5,11 @@ import 'swiper/scss';
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
 
-import TimelineItem from '../Timeline/TimelineItem';
-import YearCircle from '../YearCircle/YearCircle';
+import SegmentContent from './SegmentContent/SegmentContent';
 import styles from './SwiperTimeline.module.scss';
 import { NavigationOptions } from 'swiper/types';
+import { Modal } from 'src/app/components/Modal/Modal';
+import YearCircle from '@/app/components/YearCircle/YearCircle';
 
 interface Segment {
   startYear: number;
@@ -31,6 +32,14 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [navReady, setNavReady] = useState(false);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<{ year: number; text: string } | null>(null);
+
+  const handleItemClick = (ev: { year: number; text: string }) => {
+    setSelectedEvent(ev);
+    setModalVisible(true);
+  };
+
   const currentSegment = segments[activeIndex];
 
   const handleCircleClick = (index: number) => {
@@ -45,14 +54,15 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
   const checkScroll = useCallback(() => {
     const el = contentRef.current;
     if (!el) return;
+
     setCanScrollLeft(el.scrollLeft > 0);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
+    setCanScrollRight(Math.ceil(el.scrollLeft + el.clientWidth) < el.scrollWidth);
   }, []);
 
   const scrollContent = (direction: 'left' | 'right') => {
     const el = contentRef.current;
     if (!el) return;
-    const amount = direction === 'left' ? -300 : 300;
+    const amount = direction === 'left' ? -550 : 550;
     el.scrollBy({ left: amount, behavior: 'smooth' });
   };
 
@@ -161,15 +171,24 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
         >
           {segments.map((seg, i) => (
             <SwiperSlide key={`${seg.startYear}-${seg.endYear}`}>
-              <div className={styles.slideContent} ref={i === activeIndex ? contentRef : null}>
-                {seg.events.map((ev) => (
-                  <TimelineItem key={ev.year} year={ev.year} text={ev.text} />
-                ))}
-              </div>
+              <SegmentContent
+                events={seg.events}
+                active={i === activeIndex}
+                onClick={handleItemClick}
+                contentRef={contentRef}
+              />
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
+      <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
+        {selectedEvent && (
+          <>
+            <h2>Год: {selectedEvent.year}</h2>
+            <p>{selectedEvent.text}</p>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

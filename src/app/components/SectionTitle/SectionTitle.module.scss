@@ -1,3 +1,5 @@
+@import '@/styles/themes';
+
 .sectionTitle {
   display: flex;
   align-items: center;
@@ -9,12 +11,12 @@
 .line {
   width: 4px;
   height: 40px;
-  background: linear-gradient(to bottom, #5f6df6, #e05ba8);
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-accent));
   border-radius: 4px;
 }
 
 h2 {
   font-size: 2rem;
-  color: #2d2f3a;
+  color: var(--color-text);
   font-weight: 600;
 }

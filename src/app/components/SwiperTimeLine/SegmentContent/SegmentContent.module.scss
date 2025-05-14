@@ -1,0 +1,13 @@
+.slideContent {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  text-overflow: ellipsis;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

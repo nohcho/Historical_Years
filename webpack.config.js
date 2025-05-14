@@ -12,7 +12,11 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
-    },
+        alias: {
+            '@': path.resolve(__dirname, 'src'),
+
+            src: path.resolve(__dirname, 'src'),
+        },    },
     module: {
         rules: [
             {
@@ -24,6 +28,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: 'babel-loader',
             },
+
             {
                 test: /\.module\.s[ac]ss$/,
                 use: [
@@ -56,7 +61,10 @@ module.exports = {
                     {
                         loader: 'sass-loader',
                         options: {
-                            implementation: require('sass'), // <-- ВАЖНО
+                            implementation: require('sass'),
+                            sassOptions: {
+                                includePaths: [path.resolve(__dirname, 'src')],
+                            },
                         },
                     },
                 ],

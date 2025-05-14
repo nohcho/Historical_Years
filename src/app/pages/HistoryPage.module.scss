@@ -1,7 +1,16 @@
+@import '@/styles/themes';
+
 .container {
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
+}
+.themeToggleWrapper {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  padding: 32px 0;
 }

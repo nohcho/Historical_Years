@@ -6,7 +6,6 @@ interface YearCircleProps {
   years: number[];
   activeYear: number;
   onSelectYear: (year: number) => void;
-
   renderDotLabel?: (yearValue: number, index: number) => React.ReactNode;
 }
 
@@ -17,21 +16,23 @@ const YearCircle: React.FC<YearCircleProps> = ({
   renderDotLabel,
 }) => {
   const circleRef = useRef<HTMLDivElement>(null);
-
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
   const dotRefs = useRef<HTMLDivElement[]>([]);
   const dotInnerRefs = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     const index = years.indexOf(activeYear);
-    if (index === -1) return; // safety
+    if (index === -1) return;
 
     const angle = (360 / years.length) * index;
+
     gsap.to(circleRef.current, {
-      rotate: -angle,
       duration: 0.8,
       ease: 'power2.out',
+      rotate: -angle,
+      onUpdate: () => {
+        circleRef.current?.style.setProperty('--rotation', `${-angle}deg`);
+      },
     });
   }, [activeYear, years]);
 
@@ -95,7 +96,7 @@ const YearCircle: React.FC<YearCircleProps> = ({
                   }}
                   className={styles.dotInner}
                   style={{
-                    transform: `rotate(calc(0deg - var(--r)))`,
+                    transform: `rotate(calc(-1 * (var(--r) + var(--rotation, 0deg))))`,
                   }}
                 >
                   <span className={styles.dotLabel}>

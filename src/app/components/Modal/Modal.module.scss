@@ -1,3 +1,5 @@
+@import '@/styles/themes';
+
 .modalTransitionWrapper {
   top: 0;
   left: 0;
@@ -26,7 +28,7 @@
   z-index: 51;
   position: fixed;
   backdrop-filter: blur(3px);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); // остаётся, так как это прозрачный чёрный
 }
 
 .modalRoot {
@@ -53,21 +55,20 @@
 }
 
 .modalContainer {
-  color: #000;
+  color: var(--color-text);
   padding: 20px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  background-color: #fff;
+  background-color: var(--color-card-bg);
 }
 
 .modalCloseButton {
   width: 2rem;
-  color: #fff;
+  color: var(--color-text); // было --color-black
   right: -2.625rem;
   height: 2rem;
-  border: none;
   cursor: pointer;
   padding: 0;
   z-index: 60;
@@ -75,6 +76,9 @@
   position: absolute;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-card-bg);
 
   &:hover {
     opacity: 0.8;
