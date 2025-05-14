@@ -3,10 +3,41 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
 
+const aliasImporter = {
+    findFileUrl(url) {
+        if (url.startsWith('@/')) {
+            return new URL(
+                'file://' + path.resolve(__dirname, 'src', url.slice(2))   // cut "@/”
+            );
+        }
+        return null;
+    },
+};
+
+const sassCommon = {
+    loader: 'sass-loader',
+    options: {
+        api: 'modern',
+        implementation: require('sass'),
+        sourceMap: !isProd,
+        sassOptions: {
+            quietDeps: true,
+            silenceDeprecations: ['import'],
+            includePaths: [
+                path.resolve(__dirname, 'src/styles'),
+                path.resolve(__dirname, 'node_modules'),
+            ],
+            importers: [aliasImporter],
+        },
+    },
+};
+
 module.exports = {
+    mode: isProd ? 'production' : 'development',
     stats: 'errors-only',
 
     entry: './src/index.tsx',
+
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
@@ -16,7 +47,7 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
         alias: {
-            '@':  path.resolve(__dirname, 'src'),
+            '@': path.resolve(__dirname, 'src'),
             src: path.resolve(__dirname, 'src'),
         },
     },
@@ -32,7 +63,7 @@ module.exports = {
             },
 
             {
-                test: /\.module\.s[ac]ss$/,
+                test: /\.module\.s[ac]ss$/i,
                 use: [
                     'style-loader',
                     {
@@ -46,34 +77,17 @@ module.exports = {
                             sourceMap: !isProd,
                         },
                     },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            implementation: require('sass'),
-                            sassOptions: { quietDeps: true },
-                            sourceMap: !isProd,
-                        },
-                    },
+                    sassCommon,
                 ],
             },
 
             {
-                test: /\.s[ac]ss$/,
+                test: /\.s[ac]ss$/i,
                 exclude: /\.module\.s[ac]ss$/,
                 use: [
                     'style-loader',
-                    {
-                        loader: 'css-loader',
-                        options: { sourceMap: !isProd },
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            implementation: require('sass'),
-                            sassOptions: { includePaths: [path.resolve(__dirname, 'src')] },
-                            sourceMap: !isProd,
-                        },
-                    },
+                    { loader: 'css-loader', options: { sourceMap: !isProd } },
+                    sassCommon,
                 ],
             },
         ],
@@ -89,6 +103,4 @@ module.exports = {
         port: 4000,
         client: { overlay: { errors: true, warnings: false } },
     },
-
-    mode: isProd ? 'production' : 'development',
 };
