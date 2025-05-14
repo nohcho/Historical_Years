@@ -4,11 +4,12 @@ import styles from './TimelineItem.module.scss';
 interface TimelineItemProps {
   year: number;
   text: string;
+  onClick?: () => void;
 }
 
-const TimelineItem: React.FC<TimelineItemProps> = ({ year, text }) => {
+const TimelineItem: React.FC<TimelineItemProps> = ({ year, text, onClick }) => {
   return (
-    <div className={styles.item}>
+    <div onClick={onClick} className={styles.item}>
       <h4>{year}</h4>
       <p>{text}</p>
     </div>

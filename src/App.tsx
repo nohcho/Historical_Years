@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { HistoryPage } from './app/pages/HistoryPage';
-import './styles.scss';
+import '@/styles/_global.scss';
 
 const App: React.FC = () => {
   return (
     <div className={'container'}>
-      <HistoryPage />;
+      <HistoryPage />
     </div>
   );
 };

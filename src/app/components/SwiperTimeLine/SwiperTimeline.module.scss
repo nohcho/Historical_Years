@@ -1,8 +1,10 @@
+@import '@/styles/themes';
+
 .swiperTimeline {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   width: 100%;
   min-height: 100%;
 }
@@ -14,18 +16,16 @@
   gap: 2rem;
   margin-bottom: 2rem;
 
-  .startYear,
-  .endYear {
+  .startYear {
+    color: var(--color-primary);
     font-size: 6rem;
     font-weight: bold;
   }
 
-  .startYear {
-    color: #5f6df6;
-  }
-
   .endYear {
-    color: #e05ba8;
+    color: var(--color-accent);
+    font-size: 6rem;
+    font-weight: bold;
   }
 }
 
@@ -36,13 +36,13 @@
 
   button {
     padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
-    background: white;
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
     border-radius: 4px;
     cursor: pointer;
 
     &:hover {
-      background: #f0f0f0;
+      background: var(--color-hover);
     }
   }
 }
@@ -55,19 +55,6 @@
   .swiper {
     width: 100%;
   }
-
-  .slideContent {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    overflow-x: auto;
-    padding-bottom: 1rem;
-    scroll-behavior: smooth;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
 }
 
 .btnContainer {
@@ -76,37 +63,21 @@
   margin-top: 16px;
 }
 
-.slidePrevBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-}
+.slidePrevBtn,
 .slideNextBtn {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   cursor: pointer;
   transition: background 0.2s;
-
+  color: var(--color-primary);
   &:hover {
-    background-color: #f0f0f0;
+    background-color: var(--color-hover);
   }
 }
