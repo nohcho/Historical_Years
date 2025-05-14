@@ -11,10 +11,10 @@
 
 .bigYears {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 500px;
+
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem; /* центр по горизонтали */
 
   .startYear {
     color: var(--color-primary);

@@ -4,7 +4,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 50;
+  z-index: 1000;
   display: flex;
   position: fixed;
   min-height: 100vh;
@@ -25,15 +25,15 @@
   margin: 0;
   height: 100%;
   cursor: pointer;
-  z-index: 51;
+  z-index: 1001;
   position: fixed;
   backdrop-filter: blur(3px);
-  background-color: rgba(0, 0, 0, 0.5); // остаётся, так как это прозрачный чёрный
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modalRoot {
   width: 100%;
-  z-index: 53;
+  z-index: 1002;
   position: relative;
 
   &.size-sm {
@@ -66,7 +66,7 @@
 
 .modalCloseButton {
   width: 2rem;
-  color: var(--color-text); // было --color-black
+  color: var(--color-text);
   right: -2.625rem;
   height: 2rem;
   cursor: pointer;
