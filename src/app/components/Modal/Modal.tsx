@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, Fragment } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Transition } from 'react-transition-group';
 import styles from './Modal.module.scss';
@@ -61,47 +61,43 @@ export function Modal({
     };
   }, [visible, handleClose]);
 
-  return (
-    <Fragment>
-      {createPortal(
-        <Transition
-          in={visible}
-          timeout={TRANSITION_DURATION}
-          unmountOnExit
-          onExited={handleHide}
-          nodeRef={nodeRef}
+  return createPortal(
+    <Transition
+      in={visible}
+      timeout={TRANSITION_DURATION}
+      unmountOnExit
+      onExited={handleHide}
+      nodeRef={nodeRef}
+    >
+      {(state) => (
+        <div
+          ref={nodeRef}
+          className={styles.modalTransitionWrapper}
+          style={{
+            ...defaultStyle,
+            ...transitionStyles[state],
+          }}
         >
-          {(state) => (
-            <div
-              ref={nodeRef}
-              className={styles.modalTransitionWrapper}
-              style={{
-                ...defaultStyle,
-                ...transitionStyles[state],
-              }}
-            >
-              <div
-                className={styles.modalOverlay}
-                onClick={preventCloseByOverlay ? undefined : handleClose}
-              />
+          <div
+            className={styles.modalOverlay}
+            onClick={preventCloseByOverlay ? undefined : handleClose}
+          />
 
-              <div className={`${styles.modalRoot} ${styles[`size-${size}`]}`}>
-                {!preventClose && (
-                  <button className={styles.modalCloseButton} onClick={handleClose}>
-                    x
-                  </button>
-                )}
+          <div className={`${styles.modalRoot} ${styles[`size-${size}`]}`}>
+            {!preventClose && (
+              <button className={styles.modalCloseButton} onClick={handleClose}>
+                x
+              </button>
+            )}
 
-                <div className={styles.modalContainer}>
-                  {lock && <div className={styles.modalLock}>Загрузка...</div>}
-                  {children}
-                </div>
-              </div>
+            <div className={styles.modalContainer}>
+              {lock && <div className={styles.modalLock}>Загрузка...</div>}
+              {children}
             </div>
-          )}
-        </Transition>,
-        document.body,
+          </div>
+        </div>
       )}
-    </Fragment>
+    </Transition>,
+    document.body,
   );
 }

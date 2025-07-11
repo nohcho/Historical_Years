@@ -1,3 +1,5 @@
+@import '@/styles/vars';
+
 .slideContent {
   display: flex;
   flex-direction: row;
@@ -6,6 +8,11 @@
   padding-bottom: 1rem;
   scroll-behavior: smooth;
   text-overflow: ellipsis;
+
+  @media (max-width: $mobile) {
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+  }
 
   &::-webkit-scrollbar {
     display: none;

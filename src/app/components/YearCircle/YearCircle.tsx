@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Fragment } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import styles from './YearCircle.module.scss';
 
@@ -19,6 +19,28 @@ const YearCircle: React.FC<YearCircleProps> = ({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dotRefs = useRef<HTMLDivElement[]>([]);
   const dotInnerRefs = useRef<HTMLDivElement[]>([]);
+  const [radius, setRadius] = useState('200px');
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  useEffect(() => {
+    const updateRadius = () => {
+      if (!circleRef.current) return;
+      const width = circleRef.current.offsetWidth;
+      if (!width) return;
+      const newRadiusPx = width / 2;
+      const newRadius = `${newRadiusPx}px`;
+      if (newRadius !== radius) {
+        setRadius(newRadius);
+        dotRefs.current.forEach((dotEl) => {
+          if (dotEl) dotEl.style.setProperty('--radius', newRadius);
+        });
+        setForceUpdate((prev) => prev + 1);
+      }
+    };
+    updateRadius();
+    window.addEventListener('resize', updateRadius);
+    return () => window.removeEventListener('resize', updateRadius);
+  }, [radius]);
 
   useEffect(() => {
     const index = years.indexOf(activeYear);
@@ -34,7 +56,7 @@ const YearCircle: React.FC<YearCircleProps> = ({
         circleRef.current?.style.setProperty('--rotation', `${-angle}deg`);
       },
     });
-  }, [activeYear, years]);
+  }, [activeYear, years, radius]);
 
   useEffect(() => {
     dotRefs.current.forEach((dotEl, i) => {
@@ -46,6 +68,8 @@ const YearCircle: React.FC<YearCircleProps> = ({
 
       const size = isActive || isHovered ? 40 : 14;
       const labelOpacity = isActive || isHovered ? 1 : 0;
+
+      dotEl.style.setProperty('--radius', radius);
 
       gsap.to(dotEl, {
         width: size,
@@ -60,10 +84,10 @@ const YearCircle: React.FC<YearCircleProps> = ({
         ease: 'power2.out',
       });
     });
-  }, [hoveredIndex, activeYear, years]);
+  }, [hoveredIndex, activeYear, years, radius]);
 
   return (
-    <Fragment>
+    <>
       <div className={styles.backgroundLines}>
         <div className={styles.circle} />
       </div>
@@ -75,15 +99,17 @@ const YearCircle: React.FC<YearCircleProps> = ({
 
             return (
               <div
-                key={yearValue}
+                key={`${yearValue}-${forceUpdate}`}
                 ref={(el) => {
-                  if (el) dotRefs.current[i] = el;
+                  if (el) {
+                    dotRefs.current[i] = el;
+                  }
                 }}
                 className={styles.dot}
                 style={
                   {
                     '--r': `${angle}deg`,
-                    '--radius': '200px',
+                    '--radius': radius,
                   } as React.CSSProperties
                 }
                 onMouseEnter={() => setHoveredIndex(i)}
@@ -108,7 +134,7 @@ const YearCircle: React.FC<YearCircleProps> = ({
           })}
         </div>
       </div>
-    </Fragment>
+    </>
   );
 };
 
