@@ -1,5 +1,7 @@
 import React from 'react';
+
 import styles from './SegmentContent.module.scss';
+
 import TimelineItem from '@/app/components/Timeline/TimelineItem';
 
 interface Props {
