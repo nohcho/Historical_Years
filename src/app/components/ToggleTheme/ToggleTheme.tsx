@@ -13,7 +13,7 @@ const ToggleTheme: React.FC<Props> = ({ theme, toggleTheme }) => {
 
   return (
     <label className={styles.switch}>
-      <input type="checkbox" onChange={handleChange} checked={theme === 'dark'} />
+      <input aria-label='Toggle theme' type="checkbox" onChange={handleChange} checked={theme === 'dark'} />
       <span className={styles.slider}></span>
     </label>
   );

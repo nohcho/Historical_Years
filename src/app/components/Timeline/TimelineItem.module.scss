@@ -1,4 +1,5 @@
 @import '@/styles/themes';
+@import '@/styles/vars';
 
 .item {
   flex: 0 0 250px;
@@ -14,6 +15,20 @@
   justify-content: center;
   align-items: flex-start;
   cursor: pointer;
+  
+  @media (max-width: $mobile) {
+    flex: 0 0 200px;
+    min-width: 200px;
+    max-height: 160px;
+    padding: 0.5rem;
+  }
+  
+  @media (max-width: $tablet) {
+    flex: 0 0 220px;
+    min-width: 220px;
+    max-height: 180px;
+    padding: 0.6rem;
+  }
 
   h4 {
     color: var(--color-primary);
@@ -23,6 +38,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+    
+    @media (max-width: $mobile) {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
   }
 
   p {
@@ -34,5 +54,11 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    
+    @media (max-width: $mobile) {
+      font-size: 0.8rem;
+      line-height: 1.1;
+      max-height: 3.3em;
+    }
   }
 }

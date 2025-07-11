@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
 import 'swiper/scss';
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
 
 import SegmentContent from './SegmentContent/SegmentContent';
 import styles from './SwiperTimeline.module.scss';
-import { NavigationOptions } from 'swiper/types';
 import { Modal } from 'src/app/components/Modal/Modal';
 import YearCircle from '@/app/components/YearCircle/YearCircle';
 
@@ -30,7 +28,6 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-  const [navReady, setNavReady] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<{ year: number; text: string } | null>(null);
@@ -55,6 +52,10 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
     const el = contentRef.current;
     if (!el) return;
 
+    if (el.clientWidth === 0 || el.scrollWidth === 0) {
+      return;
+    }
+
     setCanScrollLeft(el.scrollLeft > 0);
     setCanScrollRight(Math.ceil(el.scrollLeft + el.clientWidth) < el.scrollWidth);
   }, []);
@@ -62,52 +63,48 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
   const scrollContent = (direction: 'left' | 'right') => {
     const el = contentRef.current;
     if (!el) return;
-    const amount = direction === 'left' ? -550 : 550;
+    const base = window.innerWidth <= 768 ? el.clientWidth - 80 : 550;
+    const amount = direction === 'left' ? -base : base;
     el.scrollBy({ left: amount, behavior: 'smooth' });
   };
 
+  const handlePrevPage = () => {
+    if (!swiperRef.current) return;
+    if (swiperRef.current.isBeginning) {
+      swiperRef.current.slideTo(segments.length - 1);
+    } else {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (!swiperRef.current) return;
+    if (swiperRef.current.isEnd) {
+      swiperRef.current.slideTo(0);
+    } else {
+      swiperRef.current.slideNext();
+    }
+  };
+
   useEffect(() => {
-    checkScroll();
+    const timer = setTimeout(() => {
+      checkScroll();
+    }, 100);
+
     const el = contentRef.current;
-    if (!el) return;
+    if (!el) {
+      return () => clearTimeout(timer);
+    }
 
     el.addEventListener('scroll', checkScroll);
     window.addEventListener('resize', checkScroll);
 
     return () => {
+      clearTimeout(timer);
       el.removeEventListener('scroll', checkScroll);
       window.removeEventListener('resize', checkScroll);
     };
   }, [activeIndex, checkScroll]);
-
-  useEffect(() => {
-    if (!navReady) return;
-
-    const handlePrev = (e: Event) => {
-      if (canScrollLeft) {
-        e.stopPropagation();
-        scrollContent('left');
-      }
-    };
-
-    const handleNext = (e: Event) => {
-      if (canScrollRight) {
-        e.stopPropagation();
-        scrollContent('right');
-      }
-    };
-
-    const prevBtn = prevRef.current;
-    const nextBtn = nextRef.current;
-
-    if (prevBtn) prevBtn.addEventListener('click', handlePrev, true);
-    if (nextBtn) nextBtn.addEventListener('click', handleNext, true);
-
-    return () => {
-      if (prevBtn) prevBtn.removeEventListener('click', handlePrev, true);
-      if (nextBtn) nextBtn.removeEventListener('click', handleNext, true);
-    };
-  }, [canScrollLeft, canScrollRight, navReady]);
 
   return (
     <div className={styles.swiperTimeline}>
@@ -128,42 +125,34 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
           {activeIndex + 1}/{segments.length}
         </div>
         <div className={styles.btnContainer}>
-          <button className={styles.slidePrevBtn} onClick={() => swiperRef.current?.slidePrev()}>
+          <button className={styles.slidePrevBtn} onClick={handlePrevPage}>
             {'<'}
           </button>
-          <button className={styles.slideNextBtn} onClick={() => swiperRef.current?.slideNext()}>
+          <button className={styles.slideNextBtn} onClick={handleNextPage}>
             {'>'}
           </button>
         </div>
 
         {canScrollLeft && (
-          <div ref={prevRef} className={`swiper-button-prev ${styles.customNav}`}></div>
+          <div
+            ref={prevRef}
+            className="swiper-button-prev"
+            onClick={() => scrollContent('left')}
+          ></div>
         )}
         {canScrollRight && (
-          <div ref={nextRef} className={`swiper-button-next ${styles.customNav}`}></div>
+          <div
+            ref={nextRef}
+            className="swiper-button-next"
+            onClick={() => scrollContent('right')}
+          ></div>
         )}
 
         <Swiper
-          modules={[Navigation]}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
+          modules={[]}
           pagination={{ clickable: true }}
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
-            setTimeout(() => {
-              // нужно для того, чтобы DOM-элементы успели отрисоваться, т.к. prevRef.current и nextRef.current могут быть ещё не доступны.
-              if (typeof swiper.params.navigation === 'object') {
-                const navigation = swiper.params.navigation as NavigationOptions;
-                navigation.prevEl = prevRef.current;
-                navigation.nextEl = nextRef.current;
-                swiper.navigation.destroy();
-                swiper.navigation.init();
-                swiper.navigation.update();
-                setNavReady(true);
-              }
-            });
           }}
           onSlideChange={onSlideChange}
           spaceBetween={50}

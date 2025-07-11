@@ -1,3 +1,5 @@
+@import 'vars';
+
 @layer normalize {
   *,
   *::before,
@@ -46,12 +48,25 @@
   }
 
   .swiper {
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
     height: 150px;
+    
+    @media (max-width: $mobile) {
+      height: 120px;
+    }
   }
 
   .container {
     padding: 0 100px;
     height: 100%;
+    
+    @media (max-width: $mobile) {
+      padding: 0 16px;
+    }
+    
+    @media (max-width: $tablet) {
+      padding: 0 40px;
+    }
   }
 }

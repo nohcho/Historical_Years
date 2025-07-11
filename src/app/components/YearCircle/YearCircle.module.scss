@@ -1,4 +1,5 @@
 @import '@/styles/themes';
+@import '@/styles/vars';
 
 .wrapper {
   position: absolute;
@@ -8,6 +9,16 @@
   width: 400px;
   height: 400px;
   z-index: 1;
+  
+  @media (max-width: $mobile) {
+    width: 250px;
+    height: 250px;
+  }
+  
+  @media (max-width: $tablet) {
+    width: 300px;
+    height: 300px;
+  }
 }
 
 .circle {
@@ -70,6 +81,15 @@
     width: 100%;
     height: 1px;
     transform: translateY(-50%);
+    
+    @media (max-width: $mobile) {
+      left: 0;
+      width: 100%;
+    }
+    @media (max-width: $tablet) and (min-width: 769px) {
+      left: 0;
+      width: 100%;
+    }
   }
 
   &::after {
@@ -78,6 +98,15 @@
     width: 1px;
     height: 100%;
     transform: translateX(-50%);
+    
+    @media (max-width: $mobile) {
+      top: 0;
+      height: 100%;
+    }
+    @media (max-width: $tablet) and (min-width: 769px) {
+      top: 0;
+      height: 100%;
+    }
   }
 
   .circle {
@@ -90,5 +119,15 @@
     border-radius: 50%;
     transform: translate(-50%, -50%);
     z-index: 0;
+    
+    @media (max-width: $mobile) {
+      width: 250px;
+      height: 250px;
+    }
+    
+    @media (max-width: $tablet) {
+      width: 300px;
+      height: 300px;
+    }
   }
 }
