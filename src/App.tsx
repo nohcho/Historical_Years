@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { HistoryPage } from './app/pages/HistoryPage';
 import '@/styles/_global.scss';
 

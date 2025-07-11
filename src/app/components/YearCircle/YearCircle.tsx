@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+
 import styles from './YearCircle.module.scss';
 
 interface YearCircleProps {

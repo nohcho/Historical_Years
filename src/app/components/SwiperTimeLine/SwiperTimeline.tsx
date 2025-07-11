@@ -4,9 +4,10 @@ import 'swiper/scss';
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
 
+import { Modal } from 'src/app/components/Modal/Modal';
+
 import SegmentContent from './SegmentContent/SegmentContent';
 import styles from './SwiperTimeline.module.scss';
-import { Modal } from 'src/app/components/Modal/Modal';
 import YearCircle from '@/app/components/YearCircle/YearCircle';
 
 interface Segment {
