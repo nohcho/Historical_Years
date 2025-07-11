@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HistoryPage } from './app/pages/HistoryPage';
+import { HistoryPage } from './pages/history-page';
 import '@/styles/_global.scss';
 
 const App: React.FC = () => {

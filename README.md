@@ -55,27 +55,9 @@ npm run test:coverage
 #### Validation
 
 ```bash
-npm run validate        ч
+npm run validate        
 ```
 
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── components/      # React components
-│   │   ├── Modal/       # Modal component
-│   │   ├── SectionTitle/# Section title component
-│   │   ├── SwiperTimeLine/# Timeline swiper component
-│   │   ├── Timeline/    # Timeline item component
-│   │   ├── ToggleTheme/ # Theme toggle component
-│   │   └── YearCircle/  # Year circle navigation
-│   ├── data/           # Data files
-│   └── pages/          # Page components
-├── context/            # React contexts
-├── styles/             # Global styles
-└── types/              # TypeScript type definitions
-```
 
 ## Technologies Used
 
