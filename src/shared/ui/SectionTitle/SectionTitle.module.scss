@@ -1,0 +1,41 @@
+@import '@/styles/themes';
+@import '@/styles/vars';
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+  position: absolute;
+
+  @media (max-width: $mobile) {
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+}
+
+.line {
+  width: 4px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-accent));
+  border-radius: 4px;
+
+  @media (max-width: $mobile) {
+    width: 3px;
+    height: 30px;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--color-text);
+  font-weight: 600;
+
+  @media (max-width: $mobile) {
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: $tablet) {
+    font-size: 1.75rem;
+  }
+}
