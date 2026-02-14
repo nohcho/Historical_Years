@@ -1,0 +1,10 @@
+node_modules/
+npm-debug.log*
+coverage/
+coverage/**/*
+lcov.info
+coverage-final.json
+clover.xml
+.vscode/
+.idea/
+temp.txt
