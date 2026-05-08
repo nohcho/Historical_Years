@@ -1,5 +1,4 @@
-@import '@/styles/themes';
-@import '@/styles/vars';
+@use '@/styles/vars' as *;
 
 .wrapper {
   position: absolute;
@@ -27,27 +26,68 @@
   height: 100%;
   transform-origin: center;
   --rotation: 0deg;
+  transform: rotate(var(--rotation));
+  transition: transform 0.8s ease;
 }
 
 .dot {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 14px;
-  height: 14px;
-  background-color: var(--color-border);
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
   border-radius: 50%;
   transform-origin: center;
   transform: translate(-50%, -50%) rotate(var(--r)) translateX(var(--radius));
   display: flex;
   align-items: center;
   justify-content: center;
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--color-border);
+    transform: scale(0.35);
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.2s ease;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+  }
+}
+
+.active::before,
+.hovered::before {
+  background-color: var(--color-primary);
+  transform: scale(1);
 }
 
 .dotInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
   opacity: 0;
   transform-origin: center;
   text-align: center;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.active .dotInner,
+.hovered .dotInner {
+  opacity: 1;
 }
 
 .dotLabel {

@@ -1,5 +1,4 @@
-@import '@/styles/themes';
-@import '@/styles/vars';
+@use '@/styles/vars' as *;
 
 .modalTransitionWrapper {
   top: 0;
@@ -12,10 +11,16 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
 
   @media (max-width: $mobile) {
     justify-content: flex-end;
   }
+}
+
+.opened {
+  opacity: 1;
 }
 
 .modalOverlay {
@@ -28,9 +33,14 @@
   cursor: pointer;
   z-index: 1001;
   position: fixed;
+  padding: 0;
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
   background-color: rgba(0, 0, 0, 0.5);
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .modalRoot {
@@ -57,6 +67,7 @@
 }
 
 .modalContainer {
+  position: relative;
   color: var(--color-text);
   padding: 20px;
   max-height: 90vh;
@@ -98,4 +109,14 @@
   &:hover {
     opacity: 0.8;
   }
+}
+
+.modalLock {
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  position: absolute;
+  place-items: center;
+  border-radius: inherit;
+  background-color: color-mix(in srgb, var(--color-card-bg) 80%, transparent);
 }

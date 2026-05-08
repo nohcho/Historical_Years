@@ -1,5 +1,4 @@
-@import '@/styles/themes';
-@import '@/styles/vars';
+@use '@/styles/vars' as *;
 
 .item {
   flex: 0 0 250px;
@@ -14,7 +13,24 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  color: inherit;
+  border: 0;
   cursor: pointer;
+  text-align: left;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 
   @media (max-width: $mobile) {
     flex: 0 0 200px;

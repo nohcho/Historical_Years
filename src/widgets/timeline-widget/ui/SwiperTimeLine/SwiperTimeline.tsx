@@ -1,52 +1,44 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/scss';
-import 'swiper/scss/navigation';
-import 'swiper/scss/pagination';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import type { HistoricalEvent, HistoricalSegment } from '@/entities/historical-event';
+import { YearCircle } from '@/features/year-navigation';
 import { Modal } from '@/shared/ui';
 
 import SegmentContent from './SegmentContent/SegmentContent';
 import styles from './SwiperTimeline.module.scss';
-import { YearCircle } from '@/features/year-navigation';
-
-interface Segment {
-  startYear: number;
-  endYear: number;
-  events: { year: number; text: string }[];
-}
 
 interface SwiperTimelineProps {
-  segments: Segment[];
+  segments: HistoricalSegment[];
 }
 
-const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
+const getNextIndex = (currentIndex: number, length: number) => (currentIndex + 1) % length;
+
+const getPrevIndex = (currentIndex: number, length: number) => (currentIndex - 1 + length) % length;
+
+function SwiperTimeline({ segments }: SwiperTimelineProps) {
+  const segmentCount = segments.length;
   const [activeIndex, setActiveIndex] = useState(0);
-  const swiperRef = useRef<any>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const prevRef = useRef<HTMLDivElement>(null);
-  const nextRef = useRef<HTMLDivElement>(null);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<{ year: number; text: string } | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<HistoricalEvent | null>(null);
 
-  const handleItemClick = (ev: { year: number; text: string }) => {
-    setSelectedEvent(ev);
+  const handleItemClick = (event: HistoricalEvent) => {
+    setSelectedEvent(event);
     setModalVisible(true);
   };
 
-  const currentSegment = segments[activeIndex];
+  useEffect(() => {
+    if (activeIndex >= segmentCount) {
+      setActiveIndex(Math.max(segmentCount - 1, 0));
+    }
+  }, [activeIndex, segmentCount]);
 
   const handleCircleClick = (index: number) => {
     setActiveIndex(index);
-    swiperRef.current?.slideTo(index);
-  };
-
-  const onSlideChange = (swiper: any) => {
-    setActiveIndex(swiper.activeIndex);
   };
 
   const checkScroll = useCallback(() => {
@@ -64,48 +56,48 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
   const scrollContent = (direction: 'left' | 'right') => {
     const el = contentRef.current;
     if (!el) return;
-    const base = window.innerWidth <= 768 ? el.clientWidth - 80 : 550;
+
+    const base = Math.max(180, Math.min(el.clientWidth - 80, 550));
     const amount = direction === 'left' ? -base : base;
     el.scrollBy({ left: amount, behavior: 'smooth' });
   };
 
   const handlePrevPage = () => {
-    if (!swiperRef.current) return;
-    if (swiperRef.current.isBeginning) {
-      swiperRef.current.slideTo(segments.length - 1);
-    } else {
-      swiperRef.current.slidePrev();
-    }
+    if (segmentCount === 0) return;
+    setActiveIndex((currentIndex) => getPrevIndex(currentIndex, segmentCount));
   };
 
   const handleNextPage = () => {
-    if (!swiperRef.current) return;
-    if (swiperRef.current.isEnd) {
-      swiperRef.current.slideTo(0);
-    } else {
-      swiperRef.current.slideNext();
-    }
+    if (segmentCount === 0) return;
+    setActiveIndex((currentIndex) => getNextIndex(currentIndex, segmentCount));
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const frame = window.requestAnimationFrame(() => {
       checkScroll();
-    }, 100);
+    });
 
     const el = contentRef.current;
     if (!el) {
-      return () => clearTimeout(timer);
+      return () => window.cancelAnimationFrame(frame);
     }
 
     el.addEventListener('scroll', checkScroll);
     window.addEventListener('resize', checkScroll);
 
     return () => {
-      clearTimeout(timer);
+      window.cancelAnimationFrame(frame);
       el.removeEventListener('scroll', checkScroll);
       window.removeEventListener('resize', checkScroll);
     };
   }, [activeIndex, checkScroll]);
+
+  if (segmentCount === 0) {
+    return null;
+  }
+
+  const safeActiveIndex = Math.min(activeIndex, segmentCount - 1);
+  const currentSegment = segments[safeActiveIndex];
 
   return (
     <div className={styles.swiperTimeline}>
@@ -116,60 +108,61 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
 
       <YearCircle
         years={segments.map((_, i) => i)}
-        activeYear={activeIndex}
+        activeYear={safeActiveIndex}
         onSelectYear={handleCircleClick}
         renderDotLabel={(_, index) => `${index + 1}`}
       />
 
       <div className={styles.sliderWrapper}>
         <div className={styles.pageInfo}>
-          {activeIndex + 1}/{segments.length}
+          {safeActiveIndex + 1}/{segmentCount}
         </div>
         <div className={styles.btnContainer}>
-          <button className={styles.slidePrevBtn} onClick={handlePrevPage}>
-            {'<'}
+          <button
+            type="button"
+            className={styles.slidePrevBtn}
+            onClick={handlePrevPage}
+            aria-label="Предыдущий период"
+          >
+            &lt;
           </button>
-          <button className={styles.slideNextBtn} onClick={handleNextPage}>
-            {'>'}
+          <button
+            type="button"
+            className={styles.slideNextBtn}
+            onClick={handleNextPage}
+            aria-label="Следующий период"
+          >
+            &gt;
           </button>
         </div>
 
         {canScrollLeft && (
-          <div
-            ref={prevRef}
-            className="swiper-button-prev"
+          <button
+            type="button"
+            className={`${styles.scrollButton} ${styles.scrollPrev}`}
             onClick={() => scrollContent('left')}
-          ></div>
+            aria-label="Прокрутить события влево"
+          >
+            &lt;
+          </button>
         )}
         {canScrollRight && (
-          <div
-            ref={nextRef}
-            className="swiper-button-next"
+          <button
+            type="button"
+            className={`${styles.scrollButton} ${styles.scrollNext}`}
             onClick={() => scrollContent('right')}
-          ></div>
+            aria-label="Прокрутить события вправо"
+          >
+            &gt;
+          </button>
         )}
 
-        <Swiper
-          modules={[]}
-          pagination={{ clickable: true }}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-          }}
-          onSlideChange={onSlideChange}
-          spaceBetween={50}
-          slidesPerView={1}
-        >
-          {segments.map((seg, i) => (
-            <SwiperSlide key={`${seg.startYear}-${seg.endYear}`}>
-              <SegmentContent
-                events={seg.events}
-                active={i === activeIndex}
-                onClick={handleItemClick}
-                contentRef={contentRef}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <SegmentContent
+          key={`${currentSegment.startYear}-${currentSegment.endYear}`}
+          events={currentSegment.events}
+          onClick={handleItemClick}
+          contentRef={contentRef}
+        />
       </div>
       <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
         {selectedEvent && (
@@ -181,6 +174,6 @@ const SwiperTimeline: React.FC<SwiperTimelineProps> = ({ segments }) => {
       </Modal>
     </div>
   );
-};
+}
 
 export default SwiperTimeline;

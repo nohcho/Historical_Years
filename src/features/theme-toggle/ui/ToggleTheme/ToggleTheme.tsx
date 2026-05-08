@@ -1,28 +1,24 @@
-import React from 'react';
+import type { Theme } from '@/app/providers/ThemeContext';
 
 import styles from './ToggleTheme.module.scss';
 
 interface Props {
-  theme: string;
+  theme: Theme;
   toggleTheme: () => void;
 }
 
-const ToggleTheme: React.FC<Props> = ({ theme, toggleTheme }) => {
-  const handleChange = (_e: React.ChangeEvent<HTMLInputElement>) => {
-    toggleTheme();
-  };
-
+function ToggleTheme({ theme, toggleTheme }: Props) {
   return (
     <label className={styles.switch}>
       <input
-        aria-label="Toggle theme"
+        aria-label="Переключить тему"
         type="checkbox"
-        onChange={handleChange}
+        onChange={toggleTheme}
         checked={theme === 'dark'}
       />
-      <span className={styles.slider}></span>
+      <span className={styles.slider} />
     </label>
   );
-};
+}
 
 export default ToggleTheme;

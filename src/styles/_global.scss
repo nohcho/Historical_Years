@@ -1,4 +1,5 @@
-@import 'vars';
+@use 'vars' as *;
+@use 'themes';
 
 @layer normalize {
   *,
@@ -45,16 +46,6 @@
 
   a {
     color: currentColor;
-  }
-
-  .swiper {
-    width: 100%;
-    max-width: 600px;
-    height: 150px;
-
-    @media (max-width: $mobile) {
-      height: 120px;
-    }
   }
 
   .container {

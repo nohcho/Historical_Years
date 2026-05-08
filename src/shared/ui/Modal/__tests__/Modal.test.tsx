@@ -39,13 +39,13 @@ describe('Modal', () => {
   it('calls onClose when overlay is clicked', async () => {
     const user = userEvent.setup();
     const mockOnClose = jest.fn();
-    const { container } = render(
+    render(
       <Modal visible={true} onClose={mockOnClose}>
         <div>Modal Content</div>
       </Modal>,
     );
 
-    const overlay = container.querySelector('.modalOverlay');
+    const overlay = document.querySelector('.modalOverlay');
     if (overlay) {
       await user.click(overlay);
       expect(mockOnClose).toHaveBeenCalledTimes(1);

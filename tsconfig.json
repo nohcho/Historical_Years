@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // обязательно
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "src/*": ["src/*"]
+      "@/*": ["src/*"]
     },
     "target": "ES6",
     "module": "ESNext",

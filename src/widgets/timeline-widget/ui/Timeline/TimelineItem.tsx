@@ -1,20 +1,23 @@
-import React from 'react';
+import type { HistoricalEvent } from '@/entities/historical-event';
 
 import styles from './TimelineItem.module.scss';
 
-interface TimelineItemProps {
-  year: number;
-  text: string;
-  onClick?: () => void;
+interface TimelineItemProps extends HistoricalEvent {
+  onClick: () => void;
 }
 
-const TimelineItem: React.FC<TimelineItemProps> = ({ year, text, onClick }) => {
+function TimelineItem({ year, text, onClick }: TimelineItemProps) {
   return (
-    <div onClick={onClick} className={styles.item}>
+    <button
+      type="button"
+      className={styles.item}
+      onClick={onClick}
+      aria-label={`Открыть событие ${year} года`}
+    >
       <h4>{year}</h4>
       <p>{text}</p>
-    </div>
+    </button>
   );
-};
+}
 
 export default TimelineItem;

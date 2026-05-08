@@ -4,7 +4,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(svg|png|jpg|jpeg|gif)$': 'jest-transform-stub',
   },
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',

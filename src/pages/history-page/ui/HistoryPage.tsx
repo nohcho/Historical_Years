@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
-import { segmentsData } from '@/shared/config';
-
-import styles from './HistoryPage.module.scss';
-
-import { SectionTitle } from '@/shared/ui';
-import { SwiperTimeline } from '@/widgets/timeline-widget';
 import { ThemeContext } from '@/app/providers/ThemeContext';
 import { ToggleTheme } from '@/features/theme-toggle';
+import { segmentsData } from '@/shared/config';
+import { SectionTitle } from '@/shared/ui';
+import { SwiperTimeline } from '@/widgets/timeline-widget';
+
+import styles from './HistoryPage.module.scss';
 
 export const HistoryPage = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);

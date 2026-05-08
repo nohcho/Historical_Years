@@ -1,5 +1,4 @@
-@import '@/styles/themes';
-@import '@/styles/vars';
+@use '@/styles/vars' as *;
 
 .container {
   position: relative;

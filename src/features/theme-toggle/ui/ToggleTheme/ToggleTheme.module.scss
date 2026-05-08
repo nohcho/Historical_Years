@@ -1,5 +1,4 @@
-@import '@/styles/themes';
-@import '@/styles/vars';
+@use '@/styles/vars' as *;
 
 .switch {
   position: relative;
@@ -50,18 +49,5 @@ input:checked + .slider::before {
 
   @media (max-width: $mobile) {
     transform: translateX(25px);
-  }
-}
-
-.icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-size: 0.85rem;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-
-  @media (max-width: $mobile) {
-    font-size: 0.75rem;
   }
 }

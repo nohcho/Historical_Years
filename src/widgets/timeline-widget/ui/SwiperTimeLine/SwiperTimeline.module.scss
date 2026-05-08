@@ -1,5 +1,4 @@
-@import '@/styles/themes';
-@import '@/styles/vars';
+@use '@/styles/vars' as *;
 
 .swiperTimeline {
   display: flex;
@@ -117,9 +116,7 @@
     padding: 0 25px;
   }
 
-  .swiper {
-    width: 100%;
-  }
+  overflow: hidden;
 }
 
 .pageInfo {
@@ -176,33 +173,64 @@
   }
 }
 
-:global(.swiper-button-prev),
-:global(.swiper-button-next) {
-  @media (max-width: $mobile) {
-    z-index: 10;
+.scrollButton {
+  position: absolute;
+  top: calc(50% + 34px);
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background-color: var(--color-card-bg);
+  color: var(--color-primary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-hover);
+    transform: translateY(-50%) scale(1.05);
   }
 
-  @media (max-width: $tablet) and (min-width: 769px) {
-    z-index: 10;
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
-:global(.swiper-button-prev) {
-  @media (max-width: $mobile) {
-    left: 5px !important;
-  }
-
-  @media (max-width: $tablet) and (min-width: 769px) {
-    left: 15px !important;
-  }
+.scrollPrev,
+.scrollNext {
+  transform: translateY(-50%);
 }
 
-:global(.swiper-button-next) {
-  @media (max-width: $mobile) {
-    right: 5px !important;
+.scrollPrev {
+  left: 8px;
+}
+
+.scrollNext {
+  right: 8px;
+}
+
+.scrollPrev:hover,
+.scrollPrev:focus-visible,
+.scrollNext:hover,
+.scrollNext:focus-visible {
+  transform: translateY(-50%) scale(1.05);
+}
+
+@media (max-width: $mobile) {
+  .scrollButton {
+    width: 32px;
+    height: 32px;
   }
 
-  @media (max-width: $tablet) and (min-width: 769px) {
-    right: 15px !important;
+  .scrollPrev {
+    left: 4px;
+  }
+
+  .scrollNext {
+    right: 4px;
   }
 }

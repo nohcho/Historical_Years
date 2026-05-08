@@ -1,4 +1,6 @@
-export const segmentsData = [
+import type { HistoricalSegment } from '@/entities/historical-event';
+
+export const segmentsData: HistoricalSegment[] = [
   {
     startYear: 1900,
     endYear: 1918,

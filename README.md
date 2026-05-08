@@ -8,15 +8,15 @@ A React TypeScript application for displaying historical events in an interactiv
 - Responsive design for mobile and desktop
 - Theme switching (light/dark mode)
 - Modal popups for detailed event information
-- Swiper navigation for timeline segments
+- Segment navigation for timeline periods
 - Circular year navigation
 
 ## Development Setup
 
 ### Prerequisites
 
-- Node.js (version 18.16.0 or higher)
-- npm (version 8.11.0 or higher)
+- Node.js (version 18.20.0 or higher)
+- npm (version 9.0.0 or higher)
 
 ### Installation
 
@@ -29,47 +29,55 @@ npm install
 #### Development
 
 ```bash
-npm start                
-npm run build         
+npm start
+npm run build
 ```
 
 #### Code Quality
 
 ```bash
-npm run lint            
-npm run lint:fix        
-npm run lint:check       
-npm run format           
-npm run check-format     
-npm run type-check      
+npm run lint
+npm run lint:fix
+npm run lint:check
+npm run format
+npm run check-format
+npm run type-check
 ```
 
 #### Testing
 
 ```bash
-npm test               
-npm run test:watch     
-npm run test:coverage   
+npm test
+npm run test:watch
+npm run test:coverage
 ```
 
 #### Validation
 
 ```bash
-npm run validate        
+npm run validate
 ```
-
 
 ## Technologies Used
 
 - **React 19** - UI framework
 - **TypeScript** - Type safety
 - **SCSS** - Styling
-- **Swiper** - Touch slider
-- **GSAP** - Animations
 - **Webpack** - Build tool
 - **Jest** - Testing framework
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
+
+## Repository Hygiene
+
+The current source tree is small, but older Git history contains committed `node_modules`
+objects. A normal cleanup commit cannot shrink clone size because Git still downloads those
+historical objects.
+
+To reduce clone time on the remote repository, rewrite history with a tool such as
+`git filter-repo` or BFG, remove `node_modules` from all historical commits, and then
+force-push the rewritten branch. Coordinate this before doing it because every contributor
+will need to re-clone or reset their local copy.
 
 ## Code Quality Standards
 

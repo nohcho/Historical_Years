@@ -4,7 +4,6 @@ const tseslint = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
 const react = require('eslint-plugin-react');
 const jsxA11y = require('eslint-plugin-jsx-a11y');
-const importPlugin = require('eslint-plugin-import');
 
 module.exports = [
   {
@@ -38,17 +37,16 @@ module.exports = [
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      react: react,
+      react,
       'react-hooks': reactHooks,
       'jsx-a11y': jsxA11y,
-      import: importPlugin,
     },
     rules: {
       'no-console': 'warn',
       'no-debugger': 'error',
       'prefer-const': 'error',
       'no-var': 'error',
-      'no-unused-vars': 'off', 
+      'no-unused-vars': 'off',
 
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -65,15 +63,9 @@ module.exports = [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
-      'import/order': 'off',
-      'import/no-unresolved': 'off',
-      'import/named': 'off', 
-      'import/default': 'off', 
-      'import/namespace': 'off', 
-
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/anchor-has-content': 'warn',
-      'jsx-a11y/click-events-have-key-events': 'off', 
+      'jsx-a11y/click-events-have-key-events': 'off',
       'jsx-a11y/no-static-element-interactions': 'off',
     },
   },

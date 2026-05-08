@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Transition } from 'react-transition-group';
 
 import styles from './Modal.module.scss';
 
 interface ModalProps {
   visible?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
   onClose?: () => void;
   preventClose?: boolean;
   preventCloseByOverlay?: boolean;
@@ -15,18 +14,6 @@ interface ModalProps {
 }
 
 const TRANSITION_DURATION = 300;
-
-const defaultStyle: React.CSSProperties = {
-  transition: `opacity ${TRANSITION_DURATION}ms ease-in-out`,
-  opacity: 0,
-};
-
-const transitionStyles: Record<string, React.CSSProperties> = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 0 },
-  exited: { opacity: 0 },
-};
 
 export function Modal({
   visible,
@@ -37,15 +24,24 @@ export function Modal({
   preventCloseByOverlay,
   lock,
 }: ModalProps) {
-  const nodeRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(Boolean(visible));
+  const [opened, setOpened] = useState(Boolean(visible));
 
   const handleClose = useCallback(() => {
     if (!preventClose) onClose?.();
   }, [onClose, preventClose]);
 
-  const handleHide = () => {
-    document.body.style.removeProperty('overflow-y');
-  };
+  useEffect(() => {
+    if (visible) {
+      setMounted(true);
+      const frame = window.requestAnimationFrame(() => setOpened(true));
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    setOpened(false);
+    const timeout = window.setTimeout(() => setMounted(false), TRANSITION_DURATION);
+    return () => window.clearTimeout(timeout);
+  }, [visible]);
 
   useEffect(() => {
     if (!visible) return;
@@ -54,51 +50,55 @@ export function Modal({
       if (e.code === 'Escape') handleClose();
     }
 
+    const previousOverflow = document.body.style.overflowY;
     document.body.style.setProperty('overflow-y', 'hidden');
     document.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      handleHide();
+      document.body.style.overflowY = previousOverflow;
     };
   }, [visible, handleClose]);
 
+  if (!mounted) {
+    return null;
+  }
+
   return createPortal(
-    <Transition
-      in={visible}
-      timeout={TRANSITION_DURATION}
-      unmountOnExit
-      onExited={handleHide}
-      nodeRef={nodeRef}
+    <div
+      className={`${styles.modalTransitionWrapper} ${opened ? styles.opened : ''}`}
+      role="presentation"
     >
-      {(state) => (
-        <div
-          ref={nodeRef}
-          className={styles.modalTransitionWrapper}
-          style={{
-            ...defaultStyle,
-            ...transitionStyles[state],
-          }}
-        >
-          <div
-            className={styles.modalOverlay}
-            onClick={preventCloseByOverlay ? undefined : handleClose}
-          />
+      <button
+        type="button"
+        className={styles.modalOverlay}
+        onClick={preventCloseByOverlay ? undefined : handleClose}
+        disabled={preventCloseByOverlay}
+        aria-label="Закрыть модальное окно"
+      />
 
-          <div className={`${styles.modalRoot} ${styles[`size-${size}`]}`}>
-            {!preventClose && (
-              <button className={styles.modalCloseButton} onClick={handleClose}>
-                x
-              </button>
-            )}
+      <div
+        className={`${styles.modalRoot} ${styles[`size-${size}`]}`}
+        role="dialog"
+        aria-modal="true"
+      >
+        {!preventClose && (
+          <button
+            type="button"
+            className={styles.modalCloseButton}
+            onClick={handleClose}
+            aria-label="Закрыть"
+          >
+            x
+          </button>
+        )}
 
-            <div className={styles.modalContainer}>
-              {lock && <div className={styles.modalLock}>Загрузка...</div>}
-              {children}
-            </div>
-          </div>
+        <div className={styles.modalContainer}>
+          {lock && <div className={styles.modalLock}>Загрузка...</div>}
+          {children}
         </div>
-      )}
-    </Transition>,
+      </div>
+    </div>,
     document.body,
   );
 }
