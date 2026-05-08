@@ -9,13 +9,25 @@ import styles from './SwiperTimeline.module.scss';
 
 interface SwiperTimelineProps {
   segments: HistoricalSegment[];
+  labels: {
+    closeModal: string;
+    closeModalOverlay: string;
+    loading: string;
+    modalYear: string;
+    previousPeriod: string;
+    nextPeriod: string;
+    scrollLeft: string;
+    scrollRight: string;
+    getEventAriaLabel: (year: number) => string;
+    getPeriodAriaLabel: (period: number) => string;
+  };
 }
 
 const getNextIndex = (currentIndex: number, length: number) => (currentIndex + 1) % length;
 
 const getPrevIndex = (currentIndex: number, length: number) => (currentIndex - 1 + length) % length;
 
-function SwiperTimeline({ segments }: SwiperTimelineProps) {
+function SwiperTimeline({ segments, labels }: SwiperTimelineProps) {
   const segmentCount = segments.length;
   const [activeIndex, setActiveIndex] = useState(0);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -111,6 +123,7 @@ function SwiperTimeline({ segments }: SwiperTimelineProps) {
         activeYear={safeActiveIndex}
         onSelectYear={handleCircleClick}
         renderDotLabel={(_, index) => `${index + 1}`}
+        getDotAriaLabel={labels.getPeriodAriaLabel}
       />
 
       <div className={styles.sliderWrapper}>
@@ -122,7 +135,7 @@ function SwiperTimeline({ segments }: SwiperTimelineProps) {
             type="button"
             className={styles.slidePrevBtn}
             onClick={handlePrevPage}
-            aria-label="Предыдущий период"
+            aria-label={labels.previousPeriod}
           >
             &lt;
           </button>
@@ -130,7 +143,7 @@ function SwiperTimeline({ segments }: SwiperTimelineProps) {
             type="button"
             className={styles.slideNextBtn}
             onClick={handleNextPage}
-            aria-label="Следующий период"
+            aria-label={labels.nextPeriod}
           >
             &gt;
           </button>
@@ -141,7 +154,7 @@ function SwiperTimeline({ segments }: SwiperTimelineProps) {
             type="button"
             className={`${styles.scrollButton} ${styles.scrollPrev}`}
             onClick={() => scrollContent('left')}
-            aria-label="Прокрутить события влево"
+            aria-label={labels.scrollLeft}
           >
             &lt;
           </button>
@@ -151,7 +164,7 @@ function SwiperTimeline({ segments }: SwiperTimelineProps) {
             type="button"
             className={`${styles.scrollButton} ${styles.scrollNext}`}
             onClick={() => scrollContent('right')}
-            aria-label="Прокрутить события вправо"
+            aria-label={labels.scrollRight}
           >
             &gt;
           </button>
@@ -162,12 +175,21 @@ function SwiperTimeline({ segments }: SwiperTimelineProps) {
           events={currentSegment.events}
           onClick={handleItemClick}
           contentRef={contentRef}
+          getEventAriaLabel={labels.getEventAriaLabel}
         />
       </div>
-      <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
+      <Modal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        closeLabel={labels.closeModal}
+        overlayCloseLabel={labels.closeModalOverlay}
+        loadingLabel={labels.loading}
+      >
         {selectedEvent && (
           <>
-            <h2>Год: {selectedEvent.year}</h2>
+            <h2>
+              {labels.modalYear}: {selectedEvent.year}
+            </h2>
             <p>{selectedEvent.text}</p>
           </>
         )}

@@ -11,6 +11,9 @@ interface ModalProps {
   preventCloseByOverlay?: boolean;
   size?: 'sm' | 'md' | 'lg';
   lock?: boolean;
+  closeLabel?: string;
+  overlayCloseLabel?: string;
+  loadingLabel?: string;
 }
 
 const TRANSITION_DURATION = 300;
@@ -23,6 +26,9 @@ export function Modal({
   preventClose,
   preventCloseByOverlay,
   lock,
+  closeLabel = 'Close',
+  overlayCloseLabel = 'Close modal',
+  loadingLabel = 'Loading...',
 }: ModalProps) {
   const [mounted, setMounted] = useState(Boolean(visible));
   const [opened, setOpened] = useState(Boolean(visible));
@@ -74,7 +80,7 @@ export function Modal({
         className={styles.modalOverlay}
         onClick={preventCloseByOverlay ? undefined : handleClose}
         disabled={preventCloseByOverlay}
-        aria-label="Закрыть модальное окно"
+        aria-label={overlayCloseLabel}
       />
 
       <div
@@ -87,14 +93,14 @@ export function Modal({
             type="button"
             className={styles.modalCloseButton}
             onClick={handleClose}
-            aria-label="Закрыть"
+            aria-label={closeLabel}
           >
             x
           </button>
         )}
 
         <div className={styles.modalContainer}>
-          {lock && <div className={styles.modalLock}>Загрузка...</div>}
+          {lock && <div className={styles.modalLock}>{loadingLabel}</div>}
           {children}
         </div>
       </div>

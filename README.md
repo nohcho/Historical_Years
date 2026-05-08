@@ -7,6 +7,7 @@ A React TypeScript application for displaying historical events in an interactiv
 - Interactive timeline with historical events
 - Responsive design for mobile and desktop
 - Theme switching (light/dark mode)
+- English/Russian language switching
 - Modal popups for detailed event information
 - Segment navigation for timeline periods
 - Circular year navigation

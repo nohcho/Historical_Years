@@ -7,9 +7,16 @@ interface YearCircleProps {
   activeYear: number;
   onSelectYear: (year: number) => void;
   renderDotLabel?: (yearValue: number, index: number) => ReactNode;
+  getDotAriaLabel?: (index: number) => string;
 }
 
-function YearCircle({ years, activeYear, onSelectYear, renderDotLabel }: YearCircleProps) {
+function YearCircle({
+  years,
+  activeYear,
+  onSelectYear,
+  renderDotLabel,
+  getDotAriaLabel,
+}: YearCircleProps) {
   const circleRef = useRef<HTMLDivElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [radius, setRadius] = useState(200);
@@ -71,7 +78,7 @@ function YearCircle({ years, activeYear, onSelectYear, renderDotLabel }: YearCir
                 onMouseEnter={() => setHoveredIndex(i)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => onSelectYear(yearValue)}
-                aria-label={`Показать период ${i + 1}`}
+                aria-label={getDotAriaLabel ? getDotAriaLabel(i + 1) : `Show period ${i + 1}`}
               >
                 <div
                   className={styles.dotInner}

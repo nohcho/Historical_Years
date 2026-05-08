@@ -4,14 +4,15 @@ import styles from './ToggleTheme.module.scss';
 
 interface Props {
   theme: Theme;
+  ariaLabel: string;
   toggleTheme: () => void;
 }
 
-function ToggleTheme({ theme, toggleTheme }: Props) {
+function ToggleTheme({ theme, ariaLabel, toggleTheme }: Props) {
   return (
     <label className={styles.switch}>
       <input
-        aria-label="Переключить тему"
+        aria-label={ariaLabel}
         type="checkbox"
         onChange={toggleTheme}
         checked={theme === 'dark'}

@@ -10,9 +10,10 @@ interface Props {
   events: HistoricalEvent[];
   onClick: (event: HistoricalEvent) => void;
   contentRef: RefObject<HTMLDivElement | null>;
+  getEventAriaLabel: (year: number) => string;
 }
 
-function SegmentContent({ events, onClick, contentRef }: Props) {
+function SegmentContent({ events, onClick, contentRef, getEventAriaLabel }: Props) {
   return (
     <div className={styles.slideContent} ref={contentRef}>
       {events.map((event) => (
@@ -21,6 +22,7 @@ function SegmentContent({ events, onClick, contentRef }: Props) {
           year={event.year}
           text={event.text}
           onClick={() => onClick(event)}
+          ariaLabel={getEventAriaLabel(event.year)}
         />
       ))}
     </div>

@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
+import { LanguageProvider } from './app/providers/LanguageContext';
 import { ThemeProvider } from './app/providers/ThemeContext';
 
 const rootElement = document.getElementById('root');
@@ -11,7 +12,9 @@ if (!rootElement) {
 
 const root = createRoot(rootElement);
 root.render(
-  <ThemeProvider>
-    <App />
-  </ThemeProvider>,
+  <LanguageProvider>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </LanguageProvider>,
 );
